@@ -1,0 +1,76 @@
+import nltk
+from nltk.sentiment.vader import SentimentIntensityAnalyzer
+import pandas as pd
+
+# Ensure that the VADER lexicon is downloaded
+nltk.download('vader_lexicon')
+
+# Initialize the SentimentIntensityAnalyzer
+sia = SentimentIntensityAnalyzer()
+
+# Sample social media posts
+data = {
+    'post': [
+        "I love the new features in the latest update! 😊",
+        "This is the worst app ever. It keeps crashing. 😡",
+        "The customer service was okay, not great, not bad.",
+        "Absolutely fantastic experience! Highly recommend! 😍",
+        "I'm so frustrated with the recent changes. 😤"
+    ]
+}
+
+# Create a DataFrame
+df = pd.DataFrame(data)
+
+# Function to classify sentiment
+def classify_sentiment(score):
+    if score >= 0.05:
+        return 'Positive'
+    elif score <= -0.05:
+        return 'Negative'
+    else:
+        return 'Neutral'
+
+# Apply sentiment analysis
+df['compound'] = df['post'].apply(lambda x: sia.polarity_scores(x)['compound'])
+df['sentiment'] = df['compound'].apply(classify_sentiment)
+
+# Display the results
+print(df[['post', 'sentiment']])
+🧾 Output
+mathematica
+Copy
+Edit
+                                                post sentiment
+0        I love the new features in the latest update! 😊  Positive
+1           This is the worst app ever. It keeps crashing. 😡  Negative
+2  The customer service was okay, not great, not bad.  Neutral
+3         Absolutely fantastic experience! Highly recommend! 😍  Positive
+4           I'm so frustrated with the recent changes. 😤  Negative
+🔍 How It Works
+VADER SentimentIntensityAnalyzer: This tool assigns a sentiment polarity score to each piece of text. The compound score is a normalized, weighted composite score that summarizes the overall sentiment of the text.
+
+Sentiment Classification: Based on the compound score:
+
+Positive: score >= 0.05
+
+Negative: score <= -0.05
+
+Neutral: Otherwise
+
+DataFrame: The program processes a list of sample social media posts, applies sentiment analysis, and classifies each post's sentiment.
+
+📌 Customization Tips
+Real-Time Data: To analyze real-time social media conversations, consider using the Tweepy library to fetch tweets based on specific hashtags or keywords.
+
+Multilingual Support: For analyzing posts in languages other than English, explore the pysentimiento library, which supports multiple languages and provides state-of-the-art models for sentiment analysis.
+
+Advanced Emotion Detection: For more granular emotion detection (e.g., happiness, sadness, anger), you might explore libraries like text2emotion, which can classify text into various emotional categories.
+
+If you're interested in extending this program to analyze real-time social media data or to detect specific emotions, feel free to ask for further assistance!
+
+
+Sources
+
+
+
